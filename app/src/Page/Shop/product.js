@@ -29,6 +29,9 @@ export async function wHandGet(aReq, aResp) {
 
   aResp.locals.Product = oProduct;
 
+  const oImages = await wImages(oIDProduct);
+  oProduct.Images = oImages; // attach to product
+
   aResp.locals.Title = oProduct.NameProduct + " (" + oProduct.NameBus + ")";
   aResp.render("Shop/product");
 }
@@ -65,6 +68,19 @@ async function wVtys(aIDProduct) {
   const [oRows] = await Conn.wExecPrep(oSQL, oParams);
   return oRows;
 }
+
+async function wImages(aIDProduct) {
+  const oSQL = `
+    SELECT FileName
+    FROM ProductImage
+    WHERE IDProduct = :IDProduct
+    ORDER BY DisplayOrder ASC
+  `;
+  const oParams = { IDProduct: aIDProduct };
+  const [oRows] = await Conn.wExecPrep(oSQL, oParams);
+  return oRows.map(row => row.FileName);
+}
+
 
 /** Returns the total listed variety offer and promise quantities for the
  *  specified product, or zeros if the product is not found. */
