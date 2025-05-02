@@ -22,7 +22,7 @@
 					{{!-- if the User is not Logged in, then don't show the carrot icon --}}
 					{{#if ../CredUser}}
 						{{#if IsFavorited}}
-							<img src="{{hPrefixStatic 'logo-carrot.svg'}}" alt="Favorited" class="favorite-icon">
+							<img src="{{hPrefixStatic 'logo-carrot.svg'}}" alt="Favorited" class="favorite-icon" width="30" height="30">
 						{{else}}
 							<img src="{{hPrefixStatic 'logo-carrot-negative.svg'}}" alt="Not favorited" class="favorite-icon">
 						{{/if}}
