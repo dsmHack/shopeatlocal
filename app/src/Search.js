@@ -775,19 +775,19 @@ function QrysProductTerms(aParams) {
   const oSQLScore = `MAX(
 			(IF((Product.IDProduct = :Terms), 20, 0)
 			+ IF((Vty.IDVty = :Terms), 20, 0)
-			+ (MATCH(Product.NameProduct) AGAINST(:Terms)) * 20
-			+ (MATCH(Product.Descrip) AGAINST(:Terms)) * 3
-			+ (MATCH(Vty.Size, Vty.Kind) AGAINST(:Terms) * 5)
-			+ (MATCH(Producer.NameBus) AGAINST(:Terms) * 10)
-			+ (MATCH(Subcat.NameSubcat) AGAINST(:Terms) * 8)
-			+ (MATCH(Cat.NameCat) AGAINST(:Terms) * 8)
+			 + (CAST(MATCH(Product.NameProduct) AGAINST(:Terms) AS DECIMAL(30,30)) * 20)
+			+ (CAST(MATCH(Product.Descrip) AGAINST(:Terms) AS DECIMAL(30,30)) * 3)
+			+ (CAST(MATCH(Vty.Size, Vty.Kind) AGAINST(:Terms) AS DECIMAL(30,30)) * 5)
+			+ (CAST(MATCH(Producer.NameBus) AGAINST(:Terms) AS DECIMAL(30,30)) * 10)
+			+ (CAST(MATCH(Subcat.NameSubcat) AGAINST(:Terms) AS DECIMAL(30,30)) * 8)
+			+ (CAST(MATCH(Cat.NameCat) AGAINST(:Terms) AS DECIMAL(30,30)) * 8)
 
-			+ (MATCH(Product.NameProduct) AGAINST(:TermsFlip)) * 10
-			+ (MATCH(Product.Descrip) AGAINST(:TermsFlip)) * 1.5
-			+ (MATCH(Vty.Size, Vty.Kind) AGAINST(:TermsFlip) * 2.5)
-			+ (MATCH(Producer.NameBus) AGAINST(:TermsFlip) * 1.5)
-			+ (MATCH(Subcat.NameSubcat) AGAINST(:TermsFlip) * 4)
-			+ (MATCH(Cat.NameCat) AGAINST(:TermsFlip) * 4))
+			+ (CAST(MATCH(Product.NameProduct) AGAINST(:TermsFlip) AS DECIMAL(30,30)) * 10)
+			+ (CAST(MATCH(Product.Descrip) AGAINST(:TermsFlip) AS DECIMAL(30,30)) * 1.5)
+			+ (CAST(MATCH(Vty.Size, Vty.Kind) AGAINST(:TermsFlip) AS DECIMAL(30,30)) * 2.5)
+			+ (CAST(MATCH(Producer.NameBus) AGAINST(:TermsFlip) AS DECIMAL(30,30)) * 5)
+			+ (CAST(MATCH(Subcat.NameSubcat) AGAINST(:TermsFlip) AS DECIMAL(30,30)) * 4)
+			+ (CAST(MATCH(Cat.NameCat) AGAINST(:TermsFlip) AS DECIMAL(30,30)) * 4))
 
 			* IF((Vty.QtyOffer > IFNULL(zItCartProduct.QtyProm, 0)), 1.0, 0.5)
 		)`;
@@ -830,6 +830,8 @@ function QrysProductTerms(aParams) {
     Terms: oTerms,
     TermsFlip: oTermsFlip,
   };
+
+  console.log(oParamsEx);
 
   return [oSQLCt, oSQLSel, oParamsEx];
 }
@@ -1002,7 +1004,6 @@ export async function wProducts(aParams, aIsMembEbtEligible) {
     throw Error("Search wProducts: Cannot get count");
   let oCt = oRowsCt[0].Ct;
   console.log("oCt: ", oCt);
-
   const [oRowsSel, _oFldsSel] = await Conn.wExecPrep(oSQLSel, oParams);
 
   return {
