@@ -47,33 +47,9 @@
 
 			<div class="modal-body">
 				<div class="row">
-					{{#if (gt Images.length 0)}}
-                        <div class="col-md-4 mb-3">
-                        <div id="modalCarousel{{IDProduct}}" class="carousel slide carousel-fade"
-                            data-interval="false">
-                             <!-- Indicators (dots only) -->
-                            <ol class="carousel-indicators mb-0">
-                                {{#each Images}}
-                                <li data-target="#modalCarousel{{../IDProduct}}"
-                                    data-slide-to="{{@index}}" class="{{#if @first}}active{{/if}}"></li>
-                                {{/each}}
-                            </ol>
-                            <!-- Slides -->
-                            <div class="carousel-inner">
-                                {{#each Images}}
-                                <div class="carousel-item {{#if @first}}active{{/if}}">
-                                    <img class="d-block mx-auto" src="{{hPrefixImageWithStorage this}}"
-                                        alt="{{../NameProduct}} image {{add @index 1}}">
-                                </div>
-                                {{/each}}
-                            </div>
-                        </div>
-                    </div>
-                    {{else}}
-                    <div class="col-md-4 mb-3">
-                        <p>No images available for this product.</p>
-                    </div>
-                    {{/if}}
+				    <div class="col-md-4 mb-3">
+				        {{>Product/pImageCarousel Modal=true}}
+					</div>
 
 					<div class="col-md">
 						<div class="text-center">
