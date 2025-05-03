@@ -104,25 +104,19 @@
 
 		{{#if NameImgProduct}}
 		<input type="hidden" name="NameImgProduct" value="{{NameImgProduct}}">
-		<input type="hidden" id="CkRemImg" name="CkRemImg">
+		<input type="hidden" id="CkKeepImgs" name="CkKeepImgs">
+		<script>
+			document.getElementById("CkKeepImgs").value = {{{ json2 Images }}};
+		</script>
 
 		<div class="form-row">
 			<label class="ml-1">Current product image</label>
 		</div>
 
 		<div class="mb-2">
-			<div id="RowImg" class="form-row">
-				<div class="form-group col mb-2">
-					<img src="{{hPrefixImageWithStorage NameImgProduct}}" alt="Product image"
-						class="w-100 border rounded p-0">
-				</div>
-			</div>
+			{{>Product/pImageCarousel}}
 			<button id="BtnRemImg" type="button" class="btn btn-sm btn-primary">
 				Remove
-			</button>
-			<button id="BtnRestImg" type="button"
-				class="btn btn-sm btn-primary d-none">
-				Restore
 			</button>
 		</div>
 		{{/if}}

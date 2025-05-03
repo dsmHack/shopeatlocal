@@ -14,6 +14,7 @@ import {
 import { wSubcatsProducer, ArrayFromCds, CdsAttrProduct } from "../../Db.js";
 import { Add_Props, PageAfterEditProduct } from "../../Util.js";
 import { CoopParams } from "../../Site.js";
+import { wImages, wQueryImages } from "../Shop/product.js";
 
 /** Returns an object containing fields that should be disabled in the form, and
  *  ignored during form processing. */
@@ -58,6 +59,9 @@ export async function wHandGet(aReq, aResp) {
   }
   aResp.locals.AttrsProduct = ArrayFromCds(CdsAttrProduct);
   aResp.locals.FldsDisab = FldsDisab(aReq, aResp);
+
+  const oImages = await wImages(aResp.locals.IDProduct);
+  aResp.locals.Images = oImages;
 
   aResp.locals.Title = `${CoopParams.CoopNameShort} edit product`;
   console.log(aResp.locals);
@@ -106,14 +110,21 @@ export async function wHandPost(aReq, aResp) {
   // Image upload
   // ------------
 
+  // USER can submit the form without uploading any images, in which the images are kept unchanged.
+  //   Query previous images, send them through the current upsert hack (5m)
+  // User can submit the form and specify image(s) to be removed, in which case only those images are removed.
+  //   Query previous images, remove the specified ones, and send the rest through the current upsert hack (7m)
+  // User can submit the form with new images, in which case the old images are removed and the new ones are added.
+  //   Current upsert hack will remove all images and add the new ones. (0m)
+
   // If the user selected a 'new' file, use that. Otherwise, use the previously-
   // selected file, unless the user opted to remove it:
-  let oNameImg = [];
+  const oIDProduct = aResp.locals.ProductSel.IDProduct;
+  let oNameImg = await wQueryImages(oIDProduct);
+  console.log(aReq.body.CkKeepImgs);
   if (aReq.files && aReq.files["Img"] && aReq.files["Img"].length > 0)
-    oNameImg.push(...aReq.files["Img"].map(f => f.filename));
-  else if (aReq.body.CkRemImg) oNameImg = [];
-  else if (aReq.body.NameImgProduct) oNameImg = [aReq.body.NameImgProduct];
-  else oNameImg = [];
+    oNameImg = aReq.files["Img"].map(f => f.filename);
+  else if (aReq.body.CkKeepImgs) oNameImg = aReq.body.CkKeepImgs.split(",");
 
   // Handle validation failure
   // -------------------------
@@ -136,7 +147,6 @@ export async function wHandPost(aReq, aResp) {
     WhenEdit: new Date(),
   };
 
-  const oIDProduct = aResp.locals.ProductSel.IDProduct;
   await wClearProductImages(oIDProduct);
   await wUpdOne("Product", "IDProduct", oIDProduct, oFlds, oParamsEx);
   for (const [i, name] of oNameImg.entries()) {

@@ -105,25 +105,15 @@
 
 				{{#if NameImgProducer}}
 				<input type="hidden" name="NameImgProducer" value="{{NameImgProducer}}">
-				<input type="hidden" id="CkRemImg" name="CkRemImg">
 
 				<div class="form-row">
 					<label class="ml-1">Current producer image</label>
 				</div>
 
 				<div class="mb-2">
-					<div id="RowImg" class="form-row">
-						<div class="form-group col mb-2">
-							<img src="{{hPrefixImageWithStorage NameImgProducer}}" alt="Producer image"
-								class="w-100 border rounded p-0">
-						</div>
-					</div>
+					{{>Product/pImageCarousel}}
 					<button id="BtnRemImg" type="button" class="btn btn-sm btn-primary">
 						Remove
-					</button>
-					<button id="BtnRestImg" type="button"
-						class="btn btn-sm btn-primary d-none">
-						Restore
 					</button>
 				</div>
 				{{/if}}

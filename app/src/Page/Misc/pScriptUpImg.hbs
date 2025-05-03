@@ -15,19 +15,46 @@
 //
 --}}
 
-<script>
-	$("#BtnRemImg").on("click", function () {
-		$("#RowImg").addClass("d-none");
-		$("#BtnRemImg").addClass("d-none");
-		$("#BtnRestImg").removeClass("d-none");
-		// For consistency with checkbox values:
-		$("#CkRemImg").attr("value", "on");
-	});
+// User can upload images, they appear on the UI, and can be removed
+//  Update UI to read from images and dynamically create a carousel of them
+//  Make remove button remove the image from the carousel AND input
+// User can remove individual images from the UI
+//  Update the input to contain 
+//  Update button to remove the im
 
-	$("#BtnRestImg").on("click", function () {
-		$("#RowImg").removeClass("d-none");
-		$("#BtnRemImg").removeClass("d-none");
-		$("#BtnRestImg").addClass("d-none");
-		$("#CkRemImg").removeAttr("value");
+<script>
+	function removeFileFromInput(fileIndex, inputElement) {
+		const dt = new DataTransfer();
+		const { files } = inputElement;
+
+		for (let i = 0; i < files.length; i++) {
+			if (i !== fileIndex) {
+				dt.items.add(files[i]);
+			}
+		}
+
+		inputElement.files = dt.files;
+	}
+	$('#Img').on('input', function () {
+		const files = this.files;
+		// setup carousel
+		// set CkKeepImgs
+	})
+	$("#BtnRemImg").on("click", function () {
+		const carouselImageIndex = [...document.querySelectorAll('.carousel-item')].findIndex(div => div.classList.contains('active'));
+		$("#BtnRemImg").addClass("d-none");
+		removeFileFromInput(carouselImageIndex, document.querySelector("#CkRemImg"));
+		document.querySelectorAll('.carousel-indicators li')[carouselImageIndex].remove();
+		document.querySelectorAll('.carousel-item')[carouselImageIndex].remove();
+		const indicators = document.querySelectorAll('.carousel-indicators li');
+		if (indicators[carouselImageIndex + 1]) {
+			indicators[carouselImageIndex + 1].click();
+		} else if (indicators[carouselImageIndex - 1]) {
+			indicators[carouselImageIndex - 1].click();
+		} else {
+			document.querySelector("#productCarousel").remove();
+		}
+		const keepingImages = document.querySelector('#CkKeepImgs')
+		// remove Nth image from the 
 	});
 </script>

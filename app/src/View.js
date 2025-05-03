@@ -1444,6 +1444,9 @@ export function Ready(aApp) {
   hbs.handlebars.registerHelper("json2", function (context) {
     return JSON.stringify(context);
   });
+  hbs.handlebars.registerHelper("json3", function (context) {
+    return JSON.stringify(context).replace(/&quot;/g, '"');
+  });
   hbs.handlebars.registerHelper("log", function (something) {
     console.log(something);
   });

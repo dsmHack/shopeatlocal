@@ -63,6 +63,18 @@ async function wVtys(aIDProduct) {
   return oRows;
 }
 
+export async function wQueryImages(aIDProduct) {
+  const oSQL = `
+    SELECT FileName
+      FROM ProductImage
+     WHERE IDProduct = :IDProduct
+  ORDER BY DisplayOrder ASC
+  `;
+  const oParams = { IDProduct: aIDProduct };
+  const [oRows] = await Conn.wExecPrep(oSQL, oParams);
+  return oRows;
+}
+
 export async function wImages(aIDProduct) {
   const oSQL = `
     SELECT FileName
