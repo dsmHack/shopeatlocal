@@ -3,7 +3,7 @@
 // Product page controllers
 
 import { ProductsVtysRoll } from "../../Search.js";
-import { Conn } from "../../Db.js";
+import { Conn, wPopulateIsFavorited } from "../../Db.js";
 
 export async function wHandGet(aReq, aResp) {
   const oIDProduct = aResp.locals.ProductSel.IDProduct;
@@ -25,7 +25,11 @@ export async function wHandGet(aReq, aResp) {
   const oImages = await wImages(oIDProduct);
 
   // Debug: verify what images were loaded
-  console.log(`🖼️  Loaded images for product ${oIDProduct}:`, oImages);
+  console.log(`�️  Loaded images for product ${oIDProduct}:`, oImages);
+
+  if (aResp.locals.CredImperUser?.IDMemb)
+    await wPopulateIsFavorited(aResp.locals.CredImperUser.IDMemb, [oProduct]);
+
 
   const oProduct = { ...oProductsRoll[0], ...oQtysWeb, Images: oImages };
   aResp.locals.Product = oProduct;

@@ -540,7 +540,25 @@ import {
   HandPost as productSearchPost,
 } from "./Page/Shop/product-search.js";
 
-App.route("/product-search").all(WaresPostRoute).get(productSearchGet).post(productSearchPost);
+App.route("/product-search")
+  .all(WaresPostRoute)
+  .get((req, res, next) => {
+    if (req.query.favorites) {
+      return WareCkUser(req, res, next);
+    }
+    next();
+  })
+  .get(productSearchGet)
+  .post(productSearchPost);
+
+import { HandPost as toggleFavoritePost } from "./Page/Shop/toggle-favorite.js";
+
+App.route("/toggle-favorite")
+  .all(WareBodyJSON)
+  .all(WaresPostRoute)
+  .all(WareCkUser)
+  .post(toggleFavoritePost);
+//Ends Here
 
 import { wHandGet as productGet } from "./Page/Shop/product.js";
 
