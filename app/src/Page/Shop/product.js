@@ -23,8 +23,6 @@ export async function wHandGet(aReq, aResp) {
 
   // Fetch all images for this product
 
-  if (aResp.locals.CredImperUser?.IDMemb)
-    await wPopulateIsFavorited(aResp.locals.CredImperUser.IDMemb, [oProduct]);
 
   const oImages = await wImages(oIDProduct);
 
@@ -32,6 +30,8 @@ export async function wHandGet(aReq, aResp) {
   console.log(`�️  Loaded images for product ${oIDProduct}:`, oImages);
 
   const oProduct = { ...oProductsRoll[0], ...oQtysWeb, Images: oImages };
+  if (aResp.locals.CredImperUser?.IDMemb)
+    await wPopulateIsFavorited(aResp.locals.CredImperUser.IDMemb, [oProduct]);
   aResp.locals.Product = oProduct;
 
   aResp.locals.Title = `${oProduct.NameProduct} (${oProduct.NameBus})`;
