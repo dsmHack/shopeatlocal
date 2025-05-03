@@ -37,37 +37,9 @@
 			</div>
 
 			<div class="Body flex-grow-1 mt-2 mb-1">
+{{!-- 			    { shouldModal: True} --}}
+				{{>Product/pImageCarousel SearchGrid=true}}
 
-				{{#if (gt Images.length 0)}}
-
-                				<div id="productCarousel{{IDProduct}}" class="carousel slide carousel-fade"
-                					data-interval="false">
-                					<ol class="carousel-indicators mb-0">
-                                        {{#each Images}}
-                                        <li data-target="#productCarousel{{../IDProduct}}"
-                                            data-slide-to="{{@index}}" class="{{#if @first}}active{{/if}}"></li>
-                                        {{/each}}
-                                    </ol>
-
-                					<!-- Slides -->
-                					<div class="carousel-inner" data-target="#DlgDtlProduct{{IDProduct}}" data-toggle="modal">
-                						{{#each Images}}
-                						<div class="carousel-item {{#if @first}}active{{/if}}">
-                							<img class="d-block mx-auto" src="{{hPrefixImageWithStorage this}}"
-                								alt="{{../NameProduct}} image {{add @index 1}}">
-                						</div>
-                						{{/each}}
-                					</div>
-
-                					<!-- Indicators (dots only) -->
-
-                				</div>
-
-                			{{else}}
-
-				<hr class="mx-0 mt-0 mb-2">
-				<div class="Descrip">{{Descrip}}</div>
-				{{/if}}
 			</div>
 
 
